@@ -1,8 +1,9 @@
-package main;
+package br.com.guilhermecsorgo.main;
 
-import visitors.FancyVisitor;
-import visitors.ProductOfRedNodesVisitor;
-import visitors.SumInLeavesVisitor;
+import br.com.guilhermecsorgo.abstracts.Tree;
+import br.com.guilhermecsorgo.visitors.FancyVisitor;
+import br.com.guilhermecsorgo.visitors.ProductOfRedNodesVisitor;
+import br.com.guilhermecsorgo.visitors.SumInLeavesVisitor;
 
 public class Solution {
 
