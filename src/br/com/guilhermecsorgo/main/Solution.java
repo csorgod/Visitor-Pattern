@@ -3,6 +3,7 @@ package br.com.guilhermecsorgo.main;
 import java.awt.List;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
@@ -104,7 +105,11 @@ public class Solution {
 			}
 			
 			tree = new TreeNode(nodeValues[0], nodeColors[0], 0);
+			Iterator iterator = edges.entrySet().iterator();
 			
+			while(iterator.hasNext()) {
+				if(iterator.)
+			}
 			
 		}
 		
