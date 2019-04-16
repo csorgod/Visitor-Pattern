@@ -53,29 +53,30 @@ public class Solution {
 			}
 		} else {
 			for(int index = 0; index < nodeValues.length; index ++) {
-				System.out.println("Digite o valor do nó Nº " + index);
+				System.out.println("Digite o valor do nó Nº " + index + 1);
 				nodeValues[index] = new Scanner(System.in).nextInt();
 			}
 			
 			System.out.println("Agora vamos escolher as cores. Digite 0 para VERDE ou qualquer outro número para VERMELHO");
 			
 			for(int index = 0; index < nodeColors.length; index ++) {
-				System.out.println("Digite a cor do nó Nº " + index);
+				System.out.println("Digite a cor do nó Nº " + index + 1);
 				nodeColors[index] = (new Scanner(System.in).nextInt() == 0) ? Color.GREEN : Color.RED ;
 			}
 		}
 		
-		System.out.println("Agora precisamos definir arestas entre os nós. Cada aresta significa a ligação entre o nó 'U' e o nó 'V'");
-		
-		System.out.println("Será necessário definir " + treeDepth + " arestas. Utilize o padrão 'U V' Ao final, pressione "
-				+ "enter para prosseguir");
-		System.out.println("Exemplo: 1 3 [ENTER]");
-		
-		System.out.println("Tudo certo, vamos montar sua árvore! Aguarde...");
 		
 		if(treeDepth == 1)
 			tree = new TreeLeaf(nodeValues[0], nodeColors[0], 0);
 		else {
+			
+			System.out.println("Agora precisamos definir arestas entre os nós. Cada aresta significa a ligação entre o nó "
+					+ "'U' e o nó 'V'");
+			
+			System.out.println("Será necessário definir " + treeDepth + " aresta(s). Utilize o padrão 'U V' Ao final, pressione "
+					+ "enter para prosseguir");
+			System.out.println("Exemplo: 1 3 [ENTER]");
+			
 			Map<Integer, Set<Integer>> edges = new HashMap();
 			
 			Set<Integer> uEdges;
@@ -83,15 +84,17 @@ public class Solution {
 			
 			for(int index = 0; index < treeDepth; index++)
 			{
-				int uEdge = new Scanner(System.in).nextInt();
-	            int vEdge = new Scanner(System.in).nextInt();
+				Scanner scan = new Scanner(System.in);
+				
+				int uEdge = scan.nextInt();
+	            int vEdge = scan.nextInt();
 	            
 	            uEdges = edges.get(uEdge);
-	            if(uEdges.equals(null))
+	            if(uEdges == null)
 	            	uEdges = new HashSet<>();
 	            
 	            vEdges = edges.get(vEdge);
-	            if(vEdges.equals(null))
+	            if(vEdges == null)
 	            	vEdges = new HashSet<>();
 	            
 	            uEdges.add(uEdge);
@@ -104,16 +107,42 @@ public class Solution {
 	            vEdges = null;
 			}
 			
-			tree = new TreeNode(nodeValues[0], nodeColors[0], 0);
-			Iterator iterator = edges.entrySet().iterator();
+			System.out.println("Tudo certo, vamos montar sua árvore! Aguarde...");
 			
-			while(iterator.hasNext()) {
-				if(iterator.)
-			}
+			tree = new TreeNode(nodeValues[0], nodeColors[0], 0);
+			
+			Set<Tree> treeToReturn = buildTree(tree, edges, nodeValues, nodeColors);
 			
 		}
 		
 		return tree;
+    }
+	
+	private static Set<Tree> buildTree(Tree tree, Map<Integer, Set<Integer>> edges, int[] nodeValues, Color[] nodeColors) {
+        
+		Set<Tree> treeToReturn = new HashSet<Tree>();
+		
+		Set<Integer> first = edges.get(1);
+		
+        for(int index = 1; index < edges.size(); index ++)
+        {
+        	int depth = tree.getDepth() + 1;
+        	edges.remove(index);
+        	Set<Integer> lastNode = edges.get(index);
+        	
+        	if(!lastNode.isEmpty()) 
+        	{
+        		Tree treeNode = new TreeNode(nodeValues[index - 1], nodeColors[index - 1], depth);
+        		treeToReturn.add(treeNode);
+        		treeToReturn.addAll(buildTree(tree, edges, nodeValues, nodeColors));
+        	}
+        	else 
+        	{
+        		Tree treeLeaf = new TreeLeaf(nodeValues[index - 1], nodeColors[index - 1], depth);
+        		treeToReturn.add(treeLeaf);
+            }
+        }
+        return treeToReturn;
     }
 
 
