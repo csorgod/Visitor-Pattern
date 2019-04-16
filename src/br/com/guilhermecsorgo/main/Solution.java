@@ -111,38 +111,34 @@ public class Solution {
 			
 			tree = new TreeNode(nodeValues[0], nodeColors[0], 0);
 			
-			Set<Tree> treeToReturn = buildTree(tree, edges, nodeValues, nodeColors);
+			buildTree((TreeNode)tree, 1, edges, nodeValues, nodeColors);
 			
 		}
 		
 		return tree;
     }
 	
-	private static Set<Tree> buildTree(Tree tree, Map<Integer, Set<Integer>> edges, int[] nodeValues, Color[] nodeColors) {
-        
-		Set<Tree> treeToReturn = new HashSet<Tree>();
-		
-		Set<Integer> first = edges.get(1);
-		
-        for(int index = 1; index < edges.size(); index ++)
+	private static void buildTree(TreeNode treeNode, Integer parent, Map<Integer, Set<Integer>> edges, int[] nodeValues, Color[] nodeColors) {
+        						
+        for(Integer index : edges.get(parent))
         {
-        	int depth = tree.getDepth() + 1;
-        	edges.remove(index);
+        	Tree tree;
+        	int depth = treeNode.getDepth() + 1;
+        	edges.get(parent).remove(parent);
         	Set<Integer> lastNode = edges.get(index);
         	
         	if(!lastNode.isEmpty()) 
-        	{
-        		Tree treeNode = new TreeNode(nodeValues[index - 1], nodeColors[index - 1], depth);
-        		treeToReturn.add(treeNode);
-        		treeToReturn.addAll(buildTree(tree, edges, nodeValues, nodeColors));
-        	}
+        		tree = new TreeNode(nodeValues[index - 1], nodeColors[index - 1], depth);
+        	
         	else 
-        	{
-        		Tree treeLeaf = new TreeLeaf(nodeValues[index - 1], nodeColors[index - 1], depth);
-        		treeToReturn.add(treeLeaf);
-            }
+	        	tree = new TreeLeaf(nodeValues[index - 1], nodeColors[index - 1], depth);
+        	treeNode.addChild(tree);
+        	
+        	//Tive que repetir esse código aqui em baixo ._.
+        	if(!lastNode.isEmpty())
+        		buildTree((TreeNode)tree, index, edges, nodeValues, nodeColors);
         }
-        return treeToReturn;
+        
     }
 
 
