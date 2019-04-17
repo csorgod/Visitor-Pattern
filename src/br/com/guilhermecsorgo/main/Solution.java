@@ -23,6 +23,8 @@ public class Solution {
 	 * 
 	 * */
 	
+	private static Map<Integer, Set<Integer>> edges = new HashMap();
+	
 	public static Tree solve() {
 		
 		Tree tree = null;
@@ -46,7 +48,7 @@ public class Solution {
 		
 		if(randomOrNot == 0) {
 			for(int index = 0; index < nodeValues.length; index ++) {
-				nodeValues[index] = (int) (Math.random() * 100);
+				nodeValues[index] = index + 1;
 			}
 			for(int index = 0; index < nodeColors.length; index ++) {
 				nodeColors[index] = (Math.random() < 0.5) ? Color.GREEN : Color.RED;
@@ -76,8 +78,6 @@ public class Solution {
 			System.out.println("Será necessário definir " + treeDepth + " aresta(s). Utilize o padrão 'U V' Ao final, pressione "
 					+ "enter para prosseguir");
 			System.out.println("Exemplo: 1 3 [ENTER]");
-			
-			Map<Integer, Set<Integer>> edges = new HashMap();
 			
 			Set<Integer> uEdges;
 			Set<Integer> vEdges;
@@ -111,34 +111,31 @@ public class Solution {
 			
 			tree = new TreeNode(nodeValues[0], nodeColors[0], 0);
 			
-			buildTree((TreeNode)tree, 1, edges, nodeValues, nodeColors);
+			buildTree((TreeNode)tree, 1, nodeValues, nodeColors);
 			
 		}
 		
 		return tree;
     }
 	
-	private static void buildTree(TreeNode treeNode, Integer parent, Map<Integer, Set<Integer>> edges, int[] nodeValues, Color[] nodeColors) {
-        						
-        for(Integer index : edges.get(parent))
-        {
-        	Tree tree;
-        	int depth = treeNode.getDepth() + 1;
-        	edges.get(parent).remove(parent);
-        	Set<Integer> lastNode = edges.get(index);
-        	
-        	if(!lastNode.isEmpty()) 
-        		tree = new TreeNode(nodeValues[index - 1], nodeColors[index - 1], depth);
-        	
-        	else 
-	        	tree = new TreeLeaf(nodeValues[index - 1], nodeColors[index - 1], depth);
-        	treeNode.addChild(tree);
-        	
-        	//Tive que repetir esse código aqui em baixo ._.
-        	if(!lastNode.isEmpty())
-        		buildTree((TreeNode)tree, index, edges, nodeValues, nodeColors);
-        }
+	private static void buildTree(TreeNode treeNode, int parent, int[] nodeValues, Color[] nodeColors) {
         
+		int depth = treeNode.getDepth() + 1;
+		Set<Integer> nextNode = edges.get(parent);
+		
+		if(!nextNode.equals(null) && !nextNode.isEmpty()) {
+			
+			if(nextNode.iterator().hasNext()) {
+				Tree node = new TreeNode(nodeValues[parent], nodeColors[parent], depth);
+	    		treeNode.addChild(node);
+	    		buildTree((TreeNode)node, parent + 1, nodeValues, nodeColors);
+			}
+			else
+			{
+				Tree node = new TreeLeaf(nodeValues[parent], nodeColors[parent], depth);
+				treeNode.addChild(node);
+			}
+		}
     }
 
 
